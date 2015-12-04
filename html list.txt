@@ -1,0 +1,24 @@
+index.html - home page 
+
+register.html - for user registration
+maybe with input textbox for username and password
+
+login.html - user login page
+with input textbox for username and password
+
+searchplayer.html - search player
+maybe with input textbox for playerid or name
+
+searchgame.html - search game
+maybe with input textbox for game title or id
+show comment after searching
+
+userprofile.html - for user record
+with textbox for showing user info
+
+addnewgame.html - for adding new game
+with input form for gameid, title etc.
+
+ordergame.html for ordering game
+
+

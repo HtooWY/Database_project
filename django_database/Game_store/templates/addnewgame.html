@@ -6,7 +6,7 @@
 {% if norequest %}
 <p style="color: red;">Please add game title</p>
 {% endif %}
-<form action="" method='POST'>
+<form action="" method='POST'>{% csrf_token %}
 <input type="number" name="gameid"><br>
 
 <input type="submit" value="Add">

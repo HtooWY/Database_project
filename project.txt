@@ -1,6 +1,7 @@
 create database game_community;
 
 create table player(playerid integer,
+				   loginname char(35),
 				   password char(32),
 				   join_date datetime,
 				   score decimal(2,1) check (score<=10 and score>=0),

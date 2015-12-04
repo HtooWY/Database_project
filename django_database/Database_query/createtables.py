@@ -9,13 +9,15 @@ if __name__ == '__main__':
     con=mdb.connect(host='localhost', user="htoowaiyan", passwd="Admin@12345",db="game_community")
     with con:
         cur=con.cursor()
-        cur.execute("create table player(playerid integer,\
+        cur.execute("create table player(playerid int AUTO_INCREMENT,\
+                   loginname char(35) NOT NULL Unique,\
                    password char(32),\
                    join_date datetime,\
-                   score decimal(2,1) check (score<=10 and score>=0),\
+                   score decimal(2,1),\
+                   Check (score<=10 and score >=0),\
                    primary key (playerid)\
 );")
-        cur.execute("create table game(gameid integer,\
+        cur.execute("create table game(gameid integer AUTO_INCREMENT,\
                  price decimal(10,2),\
                  title varchar(255),\
                  developer varchar(255),\
@@ -24,7 +26,7 @@ if __name__ == '__main__':
                  genre varchar(30),\
                  primary key (gameid)\
 );")
-        cur.execute("create table reviews(reviewid integer,\
+        cur.execute("create table reviews(reviewid integer AUTO_INCREMENT,\
                      playerid integer,\
                      review text,\
                      review_time datetime,\
@@ -43,12 +45,13 @@ if __name__ == '__main__':
 );")
         cur.execute("create table plays(playerid integer,\
                    gameid integer,\
-                   play_status varchar(13) check (play_status='has played' or play_status='is playing' or play_status='wants to play'),\
+                   play_status varchar(13),\
+                   Check (play_status='has played' or play_status='is playing' or play_status='wants to play'),\
                    primary key (playerid, gameid),\
                    foreign key (playerid) references player(playerid),\
                    foreign key (gameid) references game(gameid)\
 );")
-        cur.execute("create table challenges(challengerid integer,\
+        cur.execute("create table challenges(challengerid integer AUTO_INCREMENT,\
                         accepterid integer,\
                         gameid integer,\
                         challengeid integer,\
@@ -59,7 +62,7 @@ if __name__ == '__main__':
                         foreign key (accepterid) references player(playerid),\
                         foreign key (gameid) references game(gameid)\
 );")
-        cur.execute("create table comments(commenterid integer,\
+        cur.execute("create table comments(commenterid integer AUTO_INCREMENT,\
                       receiverid integer,\
                       comment_content text,\
                       comment_time datetime,\
@@ -73,5 +76,13 @@ if __name__ == '__main__':
                        foreign key (playerid) references player(playerid),\
                        foreign key (gameid) references game(gameid),\
                        primary key (gameid, playerid)\
+);")
+        cur.execute("create table ordergame(orderid integer AUTO_INCREMENT,\
+                       playerid integer,\
+                       gameid integer,\
+                       numoforder integer,\
+                       foreign key (playerid) references player(playerid),\
+                       foreign key (gameid) references game(gameid),\
+                       primary key (orderid)\
 );")
         print "finish"
