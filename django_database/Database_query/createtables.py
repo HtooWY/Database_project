@@ -18,9 +18,9 @@ if __name__ == '__main__':
                    primary key (playerid)\
 );")
         cur.execute("create table game(gameid integer AUTO_INCREMENT,\
-                 price decimal(10,2),\
                  title varchar(255),\
                  developer varchar(255),\
+                 price decimal(10,2),\
                  release_date date,\
                  score decimal(2,1) check (score<=10 and score>=0),\
                  genre varchar(30),\
@@ -34,7 +34,8 @@ if __name__ == '__main__':
                      gameid integer,\
                      primary key(reviewid),\
                      foreign key (gameid) references game(gameid),\
-                     foreign key (playerid) references player(playerid)\
+                     foreign key (playerid) references player(playerid),\
+                     constraint pgid unique (gameid,playerid)\
 );")
         cur.execute("create table rate_review(reviewid integer,\
                          playerid integer,\
@@ -60,7 +61,8 @@ if __name__ == '__main__':
                         primary key (challengeid),\
                         foreign key (challengerid) references player(playerid),\
                         foreign key (accepterid) references player(playerid),\
-                        foreign key (gameid) references game(gameid)\
+                        foreign key (gameid) references game(gameid),\
+                        constraint check_id CHECK (challengerid<>accepterid)\
 );")
         cur.execute("create table comments(commenterid integer AUTO_INCREMENT,\
                       receiverid integer,\
@@ -81,6 +83,7 @@ if __name__ == '__main__':
                        playerid integer,\
                        gameid integer,\
                        numoforder integer,\
+                       order_time datetime,\
                        foreign key (playerid) references player(playerid),\
                        foreign key (gameid) references game(gameid),\
                        primary key (orderid)\

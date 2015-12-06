@@ -6,7 +6,7 @@ Created on Nov 28, 2015
 import datetime
 print datetime.datetime.now()
 
-a="b"
-
-if a!="a":
-    print a
+a={1:"dflsdf",2:"sldkfj"}
+title="jjajjaj"
+query="select * from game where title = %s"%(title)
+print query +" %s"%(123)

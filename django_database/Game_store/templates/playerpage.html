@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>Adding new games</title>
+</head>
+<body>
+<h1>TITLE</h1>
+{% if jaja %}
+<p style="color: red;">Add text to review</p>
+{% else %}
+<p style="color: blue;">jajaj</p>
+{% endif %}
+{% if auth and not reviewed %}
+<form action="" method='POST'>{% csrf_token %}
+<input type="text" name="comment"><br>
+<input type="number" name ="rating"><br>
+<input type="submit" value="comment">
+{% elif reviewed %}
+<p style="color: red;">already reviewed</p>
+{% endif %}
+
+</form>
+{% if shishi %}
+<p style="color: red;">fucku reviewed</p>
+{% endif %}
+</body>
+
+
+</html>
