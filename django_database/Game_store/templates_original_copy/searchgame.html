@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>Search games</title>
+</head>
+<body>
+{% if norequest %}
+<p style="color: red;">Please add game title to search</p>
+{% endif %}
+<form action="" method='GET'>
+Gameid <input type="number" name="gameid"><br>
+Title <input type="text" name="title"><br>
+Developer <input type="text" name="developer"><br>
+sort by<br>
+<select name="sort">
+  <option value="release_date">year</option>
+  <option value="score">score</option>
+</select>
+<select name="order">
+  <option value="desc">descending</option>
+  <option value="asce">ascending</option>
+</select><br>
+
+<input type="submit" value="Submit">
+</form>
+</body>
+
+
+</html>
