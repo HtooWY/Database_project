@@ -1,9 +1,11 @@
 index.html - home page 
 
-register.html - for user registration
+register.html - for user registration (done)
 maybe with input textbox for username and password
 
-login.html - user login page
+challenge.html- (done)
+
+login.html - user login page (done)
 with input textbox for username and password
 
 searchplayer.html - search player
