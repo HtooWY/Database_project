@@ -65,7 +65,7 @@ def login(request):
                 return render(request,'login.html',c)
             
             return redirect("/order")
-        c["notfound"]=True
+        
         return render(request,'login.html',c)
     else:
         return render(request,'login.html',c)
@@ -126,7 +126,11 @@ def addNewGame(request):
 
 
 def index(request):
-    return render_to_response("index.html",context_instance=RequestContext(request))
+    c={}
+    if request.user is not None:
+        c["login"]=True
+        return render_to_response("index.html",c)
+    return render_to_response("index.html",c)
 
 # Search player 
 def searchPlayer(request,pid):
@@ -211,6 +215,11 @@ def gamePage(request,gid):
             c["reviewed"]=True
         else:
             c["reviewed"]=False
+        cursor.execute("Select * from rate_game where playerid=%s and gameid=%s"%(playerid,gid))
+        if cursor.rowcount==1:
+            c["rated"]=True
+        else:
+            c["rated"]=False
     if request.user.is_authenticated():
         c["auth"]=True
     
@@ -235,20 +244,62 @@ def gamePage(request,gid):
                     return render(request,"gamepage.html",c)
                 c["reviewed"]=True
                 return render(request,"gamepage.html",c)
-    #
+    if 'rating' in request.POST:
+        rating=request.POST["rating"]
         
-    
+        if rating=="":
+            c["noreview"]=True
+            return render(request,"gamepage.html",c)
+        else:
+            with conn:
+                cursor=conn.cursor()
+                try:
+                    cursor.execute("insert into rate_game(playerid,gameid,gamescore) values(%s,%s,%s)"%(playerid,gid,rating))
+                    cursor.execute("update game set score=(select AVg(gamescore) from rate_game where gameid=%s) where gameid=%s"%(gid,gid))
+                except MySQLdb.IntegrityError as e:
+                    return render(request,"gamepage.html",c)
+                c["rated"]=True
+                return render(request,"gamepage.html",c)
     return render(request,"gamepage.html",c)
    
 # player page
 def player(request,pid):
-    return HttpResponse("player page")
+    c={}
+    c.update(csrf(request))
+    conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
+    if "comment" in request.POST:
+        with conn:
+            cursor=conn.cursor()
+            cursor.execute("select * from player where loginname='%s'"%(request.user.username))
+            commenterid=cursor.fetchone()[0]
+            comment=request.POST["comment"]
+            cursor.execute("insert into comments(commenterid,receiverid,comment_content,comment_time) values(%s,%s,'%s','%s')"%(commenterid,pid,comment,datetime.datetime.now()))
+            
+    with conn:
+        cursor=conn.cursor()
+        cursor.execute("select * from player where playerid= %s"%(pid))
+        player=cursor.fetchone()
+        cursor.execute("select * from game")
+        games=cursor.fetchall()
+        cursor.execute("select loginname, receiverid, comment_content from comments, player where player.playerid=comments.commenterid and receiverid=%s"%(pid))
+        comments=cursor.fetchall()
+        
+    c["name"]=player[1]
+    c["score"]=player[4]
+    c["gamelist"]=games
+    c["comments"]=comments
+    
+        
+    return render_to_response("playerpage.html",c)
 
 # issue challenge
 @login_required(login_url='/login/')
 def challenge(request):
-    if "submit" in request.GET:
-        return redirect("/challenge")
+    c={}
+    c.update(csrf(request))
+    
+    if "action" in request.POST:
+        return render_to_response("challenge.html",c)
     
     return render(request,"challenge.html")
 

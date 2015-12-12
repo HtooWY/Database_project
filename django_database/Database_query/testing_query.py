@@ -3,7 +3,7 @@ Created on Nov 27, 2015
 
 @author: Wai Yan
 '''
-from django.contrib.auth.models import User
+
 
 import MySQLdb as mdb
 import datetime
@@ -11,8 +11,7 @@ if __name__ == '__main__':
 #     user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
 #     user.save()
     con=mdb.connect(host='localhost', user="htoowaiyan", passwd="Admin@12345",db="game_community")
-    user = User.objects.create_user('johncena', email='lennon@thebeatles.com', password='johnpassword')
-    user.save()
+
     with con:
         cur=con.cursor()
         # 
@@ -47,5 +46,14 @@ if __name__ == '__main__':
 #                                     OR (accepterid=New.accepterid));\
 #                         UPDATE player SET score=num_win/num_tot*10.0 WHERE playerid=New.accepterid;    \
 # End;")
-        cur.execute("inset into ")
+#         cur.execute("insert into rate_game(playerid,gameid,gamescore) values(%s,%s,%s)"%(1,3,1))
+#         cur.execute("select AVg(gamescore) from rate_game where gameid=3")
+#         cur.execute("update game set score=(select AVg(gamescore) from rate_game where gameid=3) where gameid=3")
+#         cur.execute("select * from game")
+#         games=cur.fetchall()
+# #         for game in games:
+# #             print game[1]
+#         print type(games)
+#         cur.execute("insert into comments(commenterid,receiverid,comment_content,comment_time) values(%s,%s,'%s','%s')"%(3,3,"hi",datetime.datetime.now()))
+        cur.execute("select loginname, receiverid, comment_content from comments, player where player.playerid=comments.commenterid and receiverid=3")
         print "finish"
