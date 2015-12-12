@@ -2,7 +2,8 @@ from django.shortcuts import render,render_to_response,redirect
 from django.http import HttpResponse,Http404,HttpRequest
 from django.template.context_processors import csrf
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.template.context import RequestContext
 import MySQLdb as mdb
@@ -14,37 +15,60 @@ from django.contrib.redirects.models import Redirect
 
 # Registration
 def register(request):
-    
-    if "loginname" in request.GET:
+    c = {}
+    c.update(csrf(request))
+    if "loginname" in request.POST:
+
+        loginname=request.POST["loginname"]
+        if loginname=="":
+            c["norequest"]=True
+            return render_to_response("register",c)
+        password=request.POST["password"]
+        email=request.POST["email"]
+       
         conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
         with conn:
             cursor=conn.cursor()
-            
             try:
-                cursor.execute("insert into player(loginname) values('adad')")
+                cursor.execute("insert into player(loginname,password,join_date) values('%s','%s','%s')"%(loginname,password,datetime.datetime.now()))
+                if email=="":
+                    user = User.objects.create_user(loginname, password=password)
+                else:
+                    user = User.objects.create_user(loginname, email=email, password=password)
+                user.save()
+                
             except MySQLdb.IntegrityError as e:
                 cursor.execute("Select * from player;")
                 row=cursor.rowcount
                 cursor.execute("ALTER TABLE player AUTO_INCREMENT=%s"%(str(row)))
-                return HttpResponse("duplicate name")
-    
-        return HttpResponse("Register player")
+                c["duplicate"]=True
+                return render_to_response("register.html",c)
+      
+        return redirect("/login")
     else:
-        return render(request,'register.html')
+        
+        return render(request,'register.html',c)
 
 # Login
 def login(request):
-    if "loginname" in request.GET:
-        username="Admin"
-        password="Admin@12345"
+    c = {}
+    c.update(csrf(request))
+    if "loginname" in request.POST:
+        username=request.POST["loginname"]
+        password=request.POST["password"]
         user = authenticate(username=username, password=password)
         if user is not None:
-            login(request,user)
-            return HttpResponse("login complete")
-    
-        return HttpResponse("Register player")
+            try:
+                auth_login(request,user)
+            except TypeError:
+                c["notfound"]=True
+                return render(request,'login.html',c)
+            
+            return redirect("/order")
+        c["notfound"]=True
+        return render(request,'login.html',c)
     else:
-        return render(request,'register.html')
+        return render(request,'login.html',c)
         
 # Ordering new game
 @login_required(login_url='/login/')
@@ -180,21 +204,29 @@ def gamePage(request,gid):
         cursor.execute("select * from game where gameid= %s"%(gid))
         if cursor.rowcount==0:
             Http404("game not found")
+        cursor.execute("select playerid from player where loginname= '%s'"%(request.user.username))
+        playerid=cursor.fetchone()[0]
+        cursor.execute("Select * from reviews where playerid=%s and gameid=%s"%(playerid,gid))
+        if cursor.rowcount==1:
+            c["reviewed"]=True
+        else:
+            c["reviewed"]=False
     if request.user.is_authenticated():
         c["auth"]=True
     
     c.update(csrf(request))
-    if 'comment' in request.POST:
-        comment=request.POST["comment"]
-        rating=request.POST["rating"]
-        if comment=="":
-            c["jaja"]=True
+    if 'review' in request.POST:
+        review=request.POST["review"]
+        
+        if review=="":
+            c["noreview"]=True
             return render(request,"gamepage.html",c)
         else:
             with conn:
                 cursor=conn.cursor()
                 try:
-                    cursor.execute("insert into reviews(playerid,gameid,review,review_time,rating) values(1,%s,'%s','%s',%s)"%(gid,comment,datetime.datetime.now(),rating))
+                    
+                    cursor.execute("insert into reviews(playerid,gameid,review,review_time) values(%s,%s,'%s','%s')"%(playerid,gid,review,datetime.datetime.now()))
                 except MySQLdb.IntegrityError as e:
                     cursor.execute("Select * from reviews;")
                     row=cursor.rowcount
@@ -203,11 +235,7 @@ def gamePage(request,gid):
                     return render(request,"gamepage.html",c)
                 c["reviewed"]=True
                 return render(request,"gamepage.html",c)
-    # need to check the userid from request.user before httpresponse
-    c["shishi"]=True
-    with conn:
-        cursor=conn.cursor()
-        cursor.execute("select review from reviews order by rating desc;")
+    #
         
     
     return render(request,"gamepage.html",c)
@@ -217,6 +245,7 @@ def player(request,pid):
     return HttpResponse("player page")
 
 # issue challenge
+@login_required(login_url='/login/')
 def challenge(request):
     if "submit" in request.GET:
         return redirect("/challenge")

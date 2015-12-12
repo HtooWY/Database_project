@@ -37,7 +37,7 @@
           <h1 class="header col s12 light"><br><br><br></h1>
         </div>
         <div class="row center">
-          <a href="login.html" id="download-button" class="btn-large waves-effect waves-light grey lighten-1">Already a member?</a>
+          <a href="{% url 'login' %}" id="download-button" class="btn-large waves-effect waves-light grey lighten-1">Already a member?</a>
           <a href="searchgame.html" id="download-button" class="btn-large waves-effect waves-light grey lighten-1">Browse games</a>
           <a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light grey lighten-1">Back to Homepage</a>
         </div>
@@ -47,41 +47,48 @@
     </div>
     <div class="parallax"><img src="../static/site_banner.png" alt="Unsplashed background img 1"></div>
   </div>
-
-<div class="container">
-<div class="row center">
-            <div class="col s12 m6 l3"><p></p></div>
+<form action="" method="POST">{% csrf_token %}
+	<div class="container">
+	<div class="row center">
+				
+				<div class="col s12 m6 l3"><p></p></div>
+				<div class="input-field col s6">
+			  <input name="loginname" type="text" class="validate">
+			  {% if duplicate %}
+			  Username already exists
+			  {% endif %}
+			  {% if nousername %}
+			  Please enter Username
+			  {% endif %}
+			  <label for="loginname">Username</label>
+			</div>
+			</div>
+	<div class="row">
+			<div class="col s12 m6 l3"><p></p></div>
 			<div class="input-field col s6">
-          <input name="loginname" type="text" class="validate">
-          <label for="loginname">Username</label>
-        </div>
-		</div>
-<div class="row">
+			  <input name="password" type="password" class="validate">
+			  <label for="password">Password</label>
+			</div>
+			</div>
+	<div class="row">
+			<div class="col s12 m6 l3"><p></p></div>
+			<div class="input-field col s6">
+			  <input name="email" type="email" class="validate" spellcheck = false>
+			<label for="email" data-error="invalid" data-success="right">Email</label>        
+			</div>
+		  </div>
+
+	<div class="row">
 		<div class="col s12 m6 l3"><p></p></div>
-        <div class="input-field col s6">
-          <input name="password" type="password" class="validate">
-          <label for="password">Password</label>
-        </div>
-        </div>
-<div class="row">
-		<div class="col s12 m6 l3"><p></p></div>
-        <div class="input-field col s6">
-          <input id="email" type="email" class="validate" spellcheck = false>
-		<label for="email" data-error="invalid" data-success="right">Email</label>        
-		</div>
-      </div>
-
-<div class="row">
-    <div class="col s12 m6 l3"><p></p></div>
-       <button class="btn waves-effect waves-light grey darken-4 col s6" type="submit" name="action">Submit your registration now
-       <i class="material-icons right">send</i>
-  </button>
-      </div>
+		   <button class="btn waves-effect waves-light grey darken-4 col s6" type="submit" name="action" formmethod="POST">Submit your registration now
+		   <i class="material-icons right">send</i>
+	  </button>
+		  </div>
 
 
-      </div>
+		  </div>
 
-
+</form>
 
 
 <!--Import jQuery before materialize.js-->

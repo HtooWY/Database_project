@@ -37,7 +37,7 @@
         </div>
         <div class="row center">
           <div class="col s12 m6 l4"><p></p></div>
-          <a href="register.html" id="download-button" class="btn-large waves-effect waves-light grey lighten-1 col s4">Not a member?</a>
+          <a href="{% url 'register' %}" id="download-button" class="btn-large waves-effect waves-light grey lighten-1 col s4">Not a member?</a>
         </div>
         <br><br>
 
@@ -45,33 +45,38 @@
     </div>
     <div class="parallax"><img src="../static/site_banner.png" alt="Unsplashed background img 1"></div>
   </div>
+  
 
-<div class="container">
-<div class="row center">
-            <div class="col s12 m6 l3"><p></p></div>
+<form action="" method="POST">{% csrf_token %}
+	<div class="container">
+	{% if notfound %}
+	Username and password not match
+	{% endif %}
+	<div class="row center">
+				<div class="col s12 m6 l3"><p></p></div>
+				<div class="input-field col s6">
+			  <input name="loginname" type="text" class="validate">
+			  <label for="loginname">Username</label>
+			</div>
+			</div>
+	<div class="row">
+			<div class="col s12 m6 l3"><p></p></div>
 			<div class="input-field col s6">
-          <input name="loginname" type="text" class="validate">
-          <label for="loginname">Username</label>
-        </div>
-		</div>
-<div class="row">
+			  <input name="password" type="password" class="validate">
+			  <label for="password">Password</label>
+			</div>
+			</div>
+
+	<div class="row">
 		<div class="col s12 m6 l3"><p></p></div>
-        <div class="input-field col s6">
-          <input name="password" type="password" class="validate">
-          <label for="password">Password</label>
-        </div>
-        </div>
-
-<div class="row">
-    <div class="col s12 m6 l3"><p></p></div>
-       <button class="btn waves-effect waves-light grey darken-4 col s6" type="submit" name="action">Submit your registration now
-       <i class="material-icons right">send</i>
-  </button>
-      </div>
+		   <button class="btn waves-effect waves-light grey darken-4 col s6" type="submit" name="action">Login now
+		   <i class="material-icons right">send</i>
+	  </button>
+		  </div>
 
 
-      </div>
-
+		  </div>
+</form>
 
 
 

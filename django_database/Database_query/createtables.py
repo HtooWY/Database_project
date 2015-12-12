@@ -57,7 +57,7 @@ if __name__ == '__main__':
                         gameid integer,\
                         challengeid integer,\
                         cha_time datetime,\
-                        outcome varchar(4) check (outcome='Win' or outcome='Lose' or outcome = 'Draw'),\
+                        outcome varchar(10) check (outcome='Win' or outcome='Lose' or outcome = 'Draw' or outcome='Pending'),\
                         primary key (challengeid),\
                         foreign key (challengerid) references player(playerid),\
                         foreign key (accepterid) references player(playerid),\
@@ -88,4 +88,25 @@ if __name__ == '__main__':
                        foreign key (gameid) references game(gameid),\
                        primary key (orderid)\
 );")
+        cur.execute("CREATE TRIGGER challenge_end\
+                    AFTER UPDATE ON challenges\
+                    For Each Row\
+                    Begin\
+                        DECLARE num_wins integer;\
+                        DECLARE num_tot integer;\
+                        SET num_wins = (SELECT COUNT(*) FROM challenges \
+                                    WHERE (challengerid=New.challengerid AND outcome='Win') \
+                                    OR (accepterid=New.challengerid AND outcome='Lose'));\
+                        SET num_tot = (SELECT COUNT(*) FROM challenges \
+                                    WHERE (challengerid=New.challengerid)) \
+                                    OR (accepterid=New.challengerid);\
+                        UPDATE player SET score=num_win/num_tot*10.0 WHERE playerid=New.challengerid;\
+                        SET num_wins = (SELECT COUNT(*) FROM challenges \
+                                    WHERE (challengerid=New.accepterid AND outcome='Win') \
+                                    OR (accepterid=New.accepterid AND outcome='Lose'));\
+                        SET num_tot = (SELECT COUNT(*) FROM challenges \
+                                    WHERE (challengerid=New.accepterid) \
+                                    OR (accepterid=New.accepterid));\
+                        UPDATE player SET score=num_win/num_tot*10.0 WHERE playerid=New.accepterid;    \
+End;")
         print "finish"
