@@ -29,7 +29,7 @@ rating scale/button to rate game (not yet)
 
 review page for read game review
 with textboxes to show reviews from review table
-with rating button to rate review (-1 for not useful, +1 for useful)
+with rating button to rate review (0 for not useful, 1 for useful)
 
 Statistics page for showing list of m most popular games/developer (m=user-specified number)
 textboxes for showing game titles and genre and developer
