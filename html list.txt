@@ -8,13 +8,17 @@ challenge.html- (done)
 login.html - user login page (done)
 with input textbox for username and password
 
-searchplayer.html - search player
+searchplayer.html - search player (Done) - output: link to the player profile, or "Failed"
 maybe with input textbox for playerid or name
 
-searchgame.html - search game
+searchgame.html - search game (Done) - output: link to a game profile, or "Search Result)
 maybe with input textbox for game title or id
 show comment after searching
 
+searchgame_result.html (Done)
+
+
+--------------------------------------------------------------------------------------
 userprofile.html - for user record
 with textbox for showing user info
 
