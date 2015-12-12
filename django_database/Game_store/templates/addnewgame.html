@@ -1,17 +1,73 @@
-<html>
-<head>
-<title>Adding new games</title>
-</head>
-<body>
-{% if norequest %}
-<p style="color: red;">Please add game title</p>
-{% endif %}
-<form action="" method='POST'>{% csrf_token %}
-<input type="number" name="gameid"><br>
+     
+ <!DOCTYPE html>
+  <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+      <title>Add new game</title>
 
-<input type="submit" value="Add">
-</form>
+      <!--Import Google Icon Font-->
+      <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="../static/css/materialize.css"  media="screen,projection"/>
+      <link href="../static/css/style_gamepage.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    </head>
+<body style="background-color:#eaeaea">
+  <nav role="navigation" style="background-color:#eaeaea">
+    <div class="nav-wrapper container">
+      <a id="logo-container" class="brand-logo"><img src="../static/LOGO.png" alt="Unsplashed background img 1"></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="index.html">Back to Home</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+
+
+
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="name" type="text" class="validate">
+          <label for="genre">Name</label>
+        </div>
+      </div>
+    </form>
+  </div>
+
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="genre" type="text" class="validate">
+          <label for="genre">Genre</label>
+        </div>
+      </div>
+    </form>
+  </div>
+
+ 
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="developer" type="text" class="validate">
+          <label for="Ddeveloper">Developer</label>
+        </div>
+      </div>
+    </form>
+  </div>
+
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="ID" type="text" class="validate">
+          <label for="ID">ID</label>
+        </div>
+      </div>
+    </form>
+  </div>
+
+      <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src="../static/js/materialize.js"></script>
+      <script type="text/javascript" src="../static/js/init.js"></script>
 </body>
+
 
 
 </html>
