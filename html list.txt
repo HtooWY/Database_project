@@ -1,4 +1,25 @@
+STATISTIC: Together with Homepage
+RECOMMENDATION: The "confirm buying this game" etc..
+
+ordergame.html for ordering game (I thought order
+game is at game page, "Play = ORDER if not owned, and owned if not ordered")
+
+order confirmation: confirm, and recommend more games (done)
+
 index.html - home page 
+
+addnewgame.html - for adding new game
+with input form for gameid, title etc.
+
+review page for read game review (Done)
+with textboxes to show reviews from review table
+with rating button to rate review (0 for not useful, 1 for useful)
+
+
+gamepage.html for specific game home page (done)
+with review textbox (done)
+rating scale/button to rate game (Done)
+
 
 register.html - for user registration (done)
 maybe with input textbox for username and password
@@ -17,28 +38,11 @@ show comment after searching
 
 searchgame_result.html (Done)
 
-
---------------------------------------------------------------------------------------
 userprofile.html - for user record
 with textbox for showing user info
 
-addnewgame.html - for adding new game
-with input form for gameid, title etc.
+--------------------------------------------------------------------------------------
 
-ordergame.html for ordering game
 
-gamepage.html for specific game home page (partially done)
-with review textbox (done)
-rating scale/button to rate game (not yet)
-
-review page for read game review
-with textboxes to show reviews from review table
-with rating button to rate review (0 for not useful, 1 for useful)
-
-Statistics page for showing list of m most popular games/developer (m=user-specified number)
-textboxes for showing game titles and genre and developer
-
-recommendation page to show games from other player's orderlist with the same order with current user after ordering
-textboxes for showing game titles and genre and developer
 
 
