@@ -31,8 +31,10 @@ review page for read game review
 with textboxes to show reviews from review table
 with rating button to rate review (-1 for not useful, +1 for useful)
 
-static page for showing m most popular games/developer (m=user-specified number)
+Statistics page for showing list of m most popular games/developer (m=user-specified number)
+textboxes for showing game titles and genre and developer
 
 recommendation page to show games from other player's orderlist with the same order with current user after ordering
+textboxes for showing game titles and genre and developer
 
 
