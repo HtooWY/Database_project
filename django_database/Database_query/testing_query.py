@@ -57,8 +57,9 @@ if __name__ == '__main__':
 #         cur.execute("insert into comments(commenterid,receiverid,comment_content,comment_time) values(%s,%s,'%s','%s')"%(3,3,"hi",datetime.datetime.now()))
 #         cur.execute("select loginname, receiverid, comment_content from comments, player where player.playerid=comments.commenterid and receiverid=3")
 #         cur.execute("select loginname, review from reviews,player where reviews.gameid=1 and reviews.playerid=player.playerid")
-        cur.execute("select * from player where loginname like '%%%s%%'"%("ad"))
-        print cur.fetchall()
+#         cur.execute("select * from player where loginname like '%%%s%%'"%("ad"))
+#         print cur.fetchall()
 #         cur.execute("insert into ordergame(playerid,gameid,numoforder) values (2,4,1)")
 #         cur.execute("select title,SUM(numoforder) as total from game g, ordergame o where o.gameid=g.gameid group by title order by total desc")
+        cur.execute("insert into challenges(accepterid,gameid,challengerid,cha_time,outcome) values(%s,%s,%s,'%s','pending')"%(8,1,1,datetime.datetime.now()))
         print "finish"

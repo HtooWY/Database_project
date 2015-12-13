@@ -10,8 +10,8 @@
       <!--Import Google Icon Font-->
       <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
-      <link type="text/css" rel="stylesheet" href="../static/css/materialize.css"  media="screen,projection"/>
-      <link href="../static/css/style_gamepage.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+      <link type="text/css" rel="stylesheet" href="/static/css/materialize.css"  media="screen,projection"/>
+      <link href="/static/css/style_gamepage.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 
 
@@ -20,7 +20,7 @@
 
  <nav role="navigation" style="background-color:#eaeaea">
     <div class="nav-wrapper container">
-      <a id="logo-container" class="brand-logo"><img src="../static/LOGO.png" alt="Unsplashed background img 1"></a>
+      <a id="logo-container" class="brand-logo"><img src="/static/LOGO.png" alt="Unsplashed background img 1"></a>
       <ul class="right hide-on-med-and-down">
         <li><a href="#">Back to Home</a></li>
       </ul>
@@ -39,7 +39,7 @@
 
               </div>
             </div>
-            <div class="parallax"><img src="../static/Wallpaper1.jpg" alt="Unsplashed background img 1"></div>
+            <div class="parallax"><img src="/static/Wallpaper1.jpg" alt="Unsplashed background img 1"></div>
   </div>
   
 <form action="" method="POST">{% csrf_token %}
@@ -79,28 +79,18 @@
 </div>
 </form>
 
+{% for pc in pending %}
 <div id = "matched">
                     <br> </br>
-                   <div class="row center"><h3> You have a pending challenge with (USER) </h3></div>
+                   <div class="row center"><h3> You have a pending challenge with player {{pc.6}} </h3></div>
 
 </div>
-
+<form action="" method="POST">{% csrf_token %}
 <div id = "container">
-          <div class="row">
-                <div class="col s12 m6 l3"><p></p></div>
-                   <button class="btn waves-effect waves-light light-green accent-2 col s3" type="submit" name="action">Accept
-                   <i class="material-icons right">done</i>
-              </button>
-
-                   <button class="btn waves-effect waves-light red lighten-1 col s3" type="submit" name="action">Decline
-                   <i class="material-icons right">stop</i>
-              </button>
-
-                  </div>
           <div class="row">
                             <div class="col s12 m6 l3"><p></p></div>
                             
-                  <button class="btn waves-effect waves-light red lighten-1 col s6" type="submit" name="action">Cancel Challenge
+                  <button class="btn waves-effect waves-light red lighten-1 col s6" type="submit" name="cancel" value="{{ pc.3 }}">Cancel Challenge
                    <i class="material-icons right">power_settings_new</i>
               </button>
 
@@ -109,6 +99,32 @@
 
 
 </div>
+</form>
+{% endfor %}
+{% for wc in waiting %}
+<div id = "matched">
+                    <br> </br>
+                   <div class="row center"><h3> Will you accept the challenge from player {{ wc.6}}? </h3></div>
+
+</div>
+<div id = "container">
+<form action="" method="POST">{% csrf_token %}
+          <div class="row">
+                <div class="col s12 m6 l3"><p></p></div>
+                   <button class="btn waves-effect waves-light light-green accent-2 col s3" type="submit" name="accept" value="{{wc.3}}">Accept
+                   <i class="material-icons right">done</i>
+              </button>
+
+                   <button class="btn waves-effect waves-light red lighten-1 col s3" type="submit" name="decline" value="{{wc.3}}">Decline
+                   <i class="material-icons right">stop</i>
+              </button>
+
+                  </div>
+</form>
+
+
+</div>
+{% endfor %}
 
 
 <!--Import jQuery before materialize.js-->

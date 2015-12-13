@@ -64,7 +64,7 @@ def login(request):
                 c["notfound"]=True
                 return render(request,'login.html',c)
             
-            return redirect("/")
+            return redirect("/player/")
         
         return render(request,'login.html',c)
     else:
@@ -177,15 +177,26 @@ def searchPlayer(request):
 
 # User Record
 def getUserRecord(request, pid):
+    c={}
     conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
     with conn:
         cursor=conn.cursor()
+        
+        cursor.execute("select * from player where loginname='%s'"%(request.user.username))
+        playerid=cursor.fetchone()[0]
+#         if playerid!=pid:
+#             return HttpResponse("not allowed")
+        
         cursor.execute("select * from player where playerid = %s"%(pid))
-        if cursor.rowcount==0:
-            raise Http404("Player not found")
-        else:
-            row = cursor.fetchone()
-    return HttpResponse("Playerid: %s \nPlayerPasword: %s"%(row[0],row[1]))
+        profileinfo=cursor.fetchone()
+        c["profileinfo"]=profileinfo
+        cursor.execute("select * from comments where commenterid = %s order by comment_time desc"%(pid))
+        c["comments"]=cursor.fetchall()
+        cursor.execute("select * from reviews where playerid     = %s order by review_time desc"%(pid))
+        c["reviews"]=cursor.fetchall()
+        cursor.execute("select o.*, title from ordergame o,game where o.playerid=%s and o.gameid=game.gameid"%(pid))
+        c["orders"]=cursor.fetchall()
+    return render_to_response("playerhistory.html",c)
 
 # Searching game
 def searchGame(request):
@@ -205,7 +216,7 @@ def searchGame(request):
                 query="select * from game where title like '%%%s%%'"%(title)
                 if genre!="":
                     query=query+" and genre= '%s'"%(genre)
-                query=query+" order by %s"%(sort)
+                query=query+" order by '%s'"%(sort)
                 
                  
                  
@@ -325,19 +336,50 @@ def player(request,pid):
     c["score"]=player[4]
     c["gamelist"]=games
     c["comments"]=comments
-    
+    if "challenge" in request.GET:
+        challengegame=request.GET["challengegame"]
+        with conn:
+            cursor=conn.cursor()
+            cursor.execute("select playerid from player where loginname= '%s'"%(request.user.username))
+            challengerid=cursor.fetchone()[0]
+            cursor.execute("select gameid from game where title= '%s'"%(challengegame))
+            gameid=cursor.fetchone()[0]
+            cursor.execute("insert into challenges(accepterid,gameid,challengerid,cha_time,outcome) values(%s,%s,%s,'%s','pending')"%(pid,gameid,challengerid,datetime.datetime.now()))
+        return redirect("/game/%s/challenge"%(gameid))
+        
+        
         
     return render_to_response("playerpage.html",c)
 
 # issue challenge
 @login_required(login_url='/login/')
-def challenge(request):
+def challenge(request,gid):
     c={}
     c.update(csrf(request))
-    
-    if "action" in request.POST:
-        return render_to_response("challenge.html",c)
-    
-    return render(request,"challenge.html")
+    conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
+    with conn:
+        cursor=conn.cursor()
+        cursor.execute("select playerid from player where loginname= '%s'"%(request.user.username))
+        playerid=cursor.fetchone()[0]
+        cursor.execute("select c.* ,loginname from challenges c, player where challengerid=%s and outcome='pending' and c.accepterid=player.playerid"%(playerid))
+        c["pending"]=cursor.fetchall()
+        cursor.execute("select c.* ,loginname from challenges c, player where accepterid=%s and outcome='pending' and c.challengerid=player.playerid"%(playerid))
+        c["waiting"]=cursor.fetchall()
+    if "accept" in request.POST:
+        cid=request.POST["accept"]
+        with conn:
+            cursor=conn.cursor()
+            cursor.execute("update challenges set outcome='accepted' where challengeid=%s"%(cid))
+    elif "decline" in request.POST:
+        cid=request.POST["decline"]
+        with conn:
+            cursor=conn.cursor()
+            cursor.execute("update challenges set outcome='declined' where challengeid=%s"%(cid))
+    elif "cancel" in request.POST:
+        cid=request.POST["cancel"]
+        with conn:
+            cursor=conn.cursor()
+            cursor.execute("update challenges set outcome='canceled' where challengeid=%s"%(cid))
+    return render(request,"challenge.html",c)
 
 # 

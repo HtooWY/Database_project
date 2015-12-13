@@ -9,8 +9,8 @@
       <!--Import Google Icon Font-->
       <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
-      <link type="text/css" rel="stylesheet" href="../static/css/materialize.css"  media="screen,projection"/>
-      <link href="../static/css/style_register.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+      <link type="text/css" rel="stylesheet" href="/static/css/materialize.css"  media="screen,projection"/>
+      <link href="/static/css/style_register.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 
 
@@ -19,7 +19,7 @@
 
  <nav role="navigation" style="background-color:#eaeaea">
     <div class="nav-wrapper container">
-      <a id="logo-container" class="brand-logo"><img src="../static/LOGO.png" alt="Unsplashed background img 1"></a>
+      <a id="logo-container" class="brand-logo"><img src="/static/LOGO.png" alt="Unsplashed background img 1"></a>
       <ul class="right hide-on-med-and-down">
         <li><a href="#">Back to Home</a></li>
       </ul>
@@ -32,31 +32,23 @@
         <div class="card-panel grey lighten-5 z-depth-1">
           <div class="row valign-wrapper">
             <div class="col s2">
-              <img src="../static/user1.jpg" alt="" class="responsive-img"> <!-- notice the "circle" class -->
-            <p> Player Score: </p>
-            <p> Challenge accepted: </p>
-            <p> Join date: </p>
+              <img src="/static/user1.jpg" alt="" class="responsive-img"> <!-- notice the "circle" class -->
+            <p> Player Score: {{ profileinfo.4}}</p>
+            <p> Password: {{ profileinfo.2}}</p>
+            <p> Join date: {{ profileinfo.3}}</p>
             </div>
             <div class="col s5">
               <span class="black-text">
                   <p>
                   <font size = "33">
-                Name of player
+                Username: {{ profileinfo.1}}
               </font>
                 </p>
 
               </span>
             </div>
 
-            <div class="input-field col s6">
-          <select>
-            <option value="" disabled selected>Games </option>
-            <option value="1">Game1</option>
-            <option value="2">Game2</option>
-            <option value="3">Game3</option>
-          </select>
-          <label>List of games played</label>
-        </div>
+ 
 
 
 
@@ -68,47 +60,22 @@
 
 
 <h3>All past comments<h3>
+{% for comment in comments%}
 <div class="col s3 m8 offset-m2 l6 offset-l3">
         <div class="card-panel grey lighten-5 z-depth-1">
           <div class="row valign-wrapper">
             <div class="col s2">
-              <img src="../static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
-            <p> Username</p>
+              <img src="/static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+            <p> {{ comment.3}}</p>
             </div>
             <div class="col s5">
-              <p> Comment goes here </p>
+              <p> {{ comment.2}} </p>
             </div>
         </div>
       </div>
-      </div>      
-
-<div class="col s3 m8 offset-m2 l6 offset-l3">
-        <div class="card-panel grey lighten-5 z-depth-1">
-          <div class="row valign-wrapper">
-            <div class="col s2">
-              <img src="../static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
-            <p> Username2</p>
-            </div>
-            <div class="col s5">
-              <p> Comment goes here </p>
-            </div>
-        </div>
-      </div>
-      </div>      
-
-<div class="col s3 m8 offset-m2 l6 offset-l3">
-        <div class="card-panel grey lighten-5 z-depth-1">
-          <div class="row valign-wrapper">
-            <div class="col s2">
-              <img src="../static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
-            <p> Username3</p>
-            </div>
-            <div class="col s5">
-              <p> Comment goes here </p>
-            </div>
-        </div>
-      </div>
-      </div>      
+      </div>  
+	  
+{% endfor %}    
 
 
     <div class="row">
@@ -121,48 +88,23 @@
 
 
 <div class = "container">
-<h3>Highest game reviews<h3>
+<h3>Last game reviews<h3>
+{% for review in reviews%}
 <div class="col s3 m8 offset-m2 l6 offset-l3">
         <div class="card-panel grey lighten-5 z-depth-1">
           <div class="row valign-wrapper">
             <div class="col s2">
-              <img src="../static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
-            <p> Username</p>
+              <img src="/static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+            <p> {{ review.3}}</p>
             </div>
             <div class="col s5">
-              <p> Comment goes here </p>
+              <p> {{ review.2}} </p>
             </div>
         </div>
       </div>
       </div>      
+{% endfor %}     
 
-<div class="col s3 m8 offset-m2 l6 offset-l3">
-        <div class="card-panel grey lighten-5 z-depth-1">
-          <div class="row valign-wrapper">
-            <div class="col s2">
-              <img src="../static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
-            <p> Username2</p>
-            </div>
-            <div class="col s5">
-              <p> Comment goes here </p>
-            </div>
-        </div>
-      </div>
-      </div>      
-
-<div class="col s3 m8 offset-m2 l6 offset-l3">
-        <div class="card-panel grey lighten-5 z-depth-1">
-          <div class="row valign-wrapper">
-            <div class="col s2">
-              <img src="../static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
-            <p> Username3</p>
-            </div>
-            <div class="col s5">
-              <p> Comment goes here </p>
-            </div>
-        </div>
-      </div>
-      </div>      
 
 
     <div class="row">
@@ -172,15 +114,32 @@
 </button>
     </div>
   </div>
+  
+<div class = "container">
+<h3>All past gameorder<h3>
+{% for order in orders%}
+<div class="col s3 m8 offset-m2 l6 offset-l3">
+        <div class="card-panel grey lighten-5 z-depth-1">
+          <div class="row valign-wrapper">
+            <div class="col s2">
+              <img src="/static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+            <p> {{ order.4}}</p>
+            </div>
+            <div class="col s5">
+              <p> Game title: {{ order.5}}<br>No. of order: {{order.3}} </p>
+            </div>
+        </div>
+      </div>
+      </div>  
+	  
+{% endfor %}  
 </div>
-
-
 
 
 <!--Import jQuery before materialize.js-->
       <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-      <script type="text/javascript" src="../static/js/materialize.js"></script>
-      <script type="text/javascript" src="../static/js/init.js"></script>
+      <script type="text/javascript" src="/static/js/materialize.js"></script>
+      <script type="text/javascript" src="/static/js/init.js"></script>
 
       <script>
       $(document).ready(function() {

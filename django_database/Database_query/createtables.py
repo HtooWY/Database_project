@@ -52,12 +52,12 @@ if __name__ == '__main__':
                    foreign key (playerid) references player(playerid),\
                    foreign key (gameid) references game(gameid)\
 );")
-        cur.execute("create table challenges(challengerid integer AUTO_INCREMENT,\
+        cur.execute("create table challenges(challengerid integer,\
                         accepterid integer,\
                         gameid integer,\
-                        challengeid integer,\
+                        challengeid integer AUTO_INCREMENT,\
                         cha_time datetime,\
-                        outcome varchar(10) check (outcome='Win' or outcome='Lose' or outcome = 'Draw' or outcome='Pending'),\
+                        outcome varchar(10) check (outcome='accepted' or outcome='declined' or outcome = 'canceled' or outcome='pending'),\
                         primary key (challengeid),\
                         foreign key (challengerid) references player(playerid),\
                         foreign key (accepterid) references player(playerid),\
