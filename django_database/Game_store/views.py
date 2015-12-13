@@ -72,54 +72,65 @@ def login(request):
         
 # Ordering new game
 @login_required(login_url='/login/')
-def orderGame(request):
+def orderGame(request,gid):
     conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
     c={}
     c.update(csrf(request))
-    if 'gameid' in request.POST:
-        gameid=request.POST['gameid']
-        if gameid=="":
-            
-            norequest=True
-            c["norequest"]=norequest
-            return render_to_response('ordernewgame.html',c)
-        else:
-            with conn:
-                cursor=conn.cursor()
-                cursor.execute("select playerid from player where loginname= '%s'"%(request.user.username))
-                pid=cursor.fetchone()[0]
-                cursor.execute("insert into ordergame(playerid,gameid,numoforder) values(%s,%s,1)"%(pid,gameid))
-                if cursor.rowcount==0:
-                    raise Http404("Player not found")
-                else:
-                    row = cursor.fetchone()
-                return render_to_response('added.html',c)
+    c["gid"]=gid
+    with conn:
+        cursor=conn.cursor()
+        cursor.execute("select playerid from player where loginname= '%s'"%(request.user.username))
+        pid=cursor.fetchone()[0]
+        cursor.execute("insert into ordergame(playerid,gameid,numoforder) values(%s,%s,1)"%(pid,gid))
+        
+#     if 'gameid' in request.POST:
+#         gameid=request.POST['gameid']
+#         if gameid=="":
+#             
+#             norequest=True
+#             c["norequest"]=norequest
+#             return render_to_response('ordernewgame.html',c)
+#         else:
+#             with conn:
+#                 cursor=conn.cursor()
+#                 cursor.execute("select playerid from player where loginname= '%s'"%(request.user.username))
+#                 pid=cursor.fetchone()[0]
+#                 cursor.execute("insert into ordergame(playerid,gameid,numoforder) values(%s,%s,1)"%(pid,gameid))
+#                 if cursor.rowcount==0:
+#                     raise Http404("Player not found")
+#                 else:
+#                     row = cursor.fetchone()
+#                 return render_to_response('added.html',c)
+#     
+#     else:
+#         return render_to_response('ordernewgame.html',c)
     
-    else:
-        return render_to_response('ordernewgame.html',c)
-    
-    return render_to_response('addnewgame.html')
+    return render_to_response('buy_confirm.html')
 
 # Add new game
 @login_required(login_url='/login/')
 def addNewGame(request):
     username=request.user.username
+    conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
     if username != "Admin":
-        return HttpResponse("only admin is allowed to add")
+        return render_to_response("notallowed.html")
     c = {}
     c.update(csrf(request))
     
-    if 'gameid' in request.POST:
-        gameid=request.POST['gameid']
-    
-        if gameid=="":
+    if 'title' in request.POST:
+        title=request.POST['title']
+        developer=request.POST['developer']
+        Genre=request.POST['genre']
+        
+        if title=="":
             
-            norequest=True
-            c["norequest"]=norequest
+            c["notitle"]=True
             return render_to_response('addnewgame.html',c)
-        else:
-             
-            return HttpResponse("haha")
+        with conn:
+            cursor=conn.cursor()
+            cursor.execute("insert into game(title,developer,genre) values('%s','%s','%s')"%(title,developer,Genre))
+            cursor.execute("select gameid from game where title='%s'"%(title))
+            return redirect("/game/%s"%(cursor.fetchone()[0]))
     
     else:
         return render_to_response('addnewgame.html',c)
@@ -127,9 +138,15 @@ def addNewGame(request):
 
 def index(request):
     c={}
-    if request.user is not None:
-        c["login"]=True
-        return render_to_response("index.html",c)
+    conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
+    with conn:
+        cursor=conn.cursor()
+        cursor.execute("select title,o.gameid,SUM(numoforder) as total from game g, ordergame o where o.gameid=g.gameid group by title order by total desc")
+        gamelist=cursor.fetchall()
+#     if request.user is not None:
+#         c["login"]=True
+#         return render_to_response("index.html",c)
+    c["gamelist"]=gamelist
     return render_to_response("index.html",c)
 
 # Search player 
@@ -202,6 +219,7 @@ def searchGame(request):
 # User feedback review the game
 def gamePage(request,gid):  
     c = {}   
+    c["gid"]=gid
     conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
     with conn:
         cursor=conn.cursor()
@@ -261,7 +279,22 @@ def gamePage(request,gid):
                 c["rated"]=True
                 return render(request,"gamepage.html",c)
     return render(request,"gamepage.html",c)
-   
+
+# reveiw page
+def review(request,gid):
+    c={}
+    conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
+    with conn:
+        cursor=conn.cursor()
+        cursor.execute("select * from game where gameid= %s"%(gid))
+        game=cursor.fetchone()
+        cursor.execute("select loginname, review from reviews,player where reviews.gameid=%s and reviews.playerid=player.playerid"%(gid))
+        reviewlist=cursor.fetchall()
+    c["title"]=game[1]
+    c["score"]=game[5]
+    c["reviewlist"]=reviewlist
+    return render_to_response("review_game.html",c)
+      
 # player page
 def player(request,pid):
     c={}

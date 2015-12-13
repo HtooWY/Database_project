@@ -55,5 +55,7 @@ if __name__ == '__main__':
 # #             print game[1]
 #         print type(games)
 #         cur.execute("insert into comments(commenterid,receiverid,comment_content,comment_time) values(%s,%s,'%s','%s')"%(3,3,"hi",datetime.datetime.now()))
-        cur.execute("select loginname, receiverid, comment_content from comments, player where player.playerid=comments.commenterid and receiverid=3")
+#         cur.execute("select loginname, receiverid, comment_content from comments, player where player.playerid=comments.commenterid and receiverid=3")
+#         cur.execute("select loginname, review from reviews,player where reviews.gameid=1 and reviews.playerid=player.playerid")
+        cur.execute("insert into ordergame values (4,4,2,1)")
         print "finish"
