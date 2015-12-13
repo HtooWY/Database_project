@@ -43,22 +43,19 @@
     </div>
     <div class="parallax"><img src="../static/site_banner.png" alt="Unsplashed background img 1"></div>
   </div>
-  
-
+{% if notitle %} 
+ <div class="row center" color="red"> you need to enter title </div>
+ {% endif %}
+<form action="" method="GET">
 	<div class="container">
 	<div class="row center">
 				<div class="col s12 m6 l3"><p></p></div>
 				<div class="input-field col s6">
-			  <input name="gamename" type="text" class="validate">
+			  <input name="title" type="text" class="validate">
 			  <label for="gamename">Game title</label>
 			</div>
 			</div>
-	<div class="row">
-		<div class="col s12 m6 l3"><p></p></div>
-		   <button class="btn waves-effect waves-light grey darken-4 col s6" type="submit" name="action">Search title
-		   <i class="material-icons right">send</i>
-	  </button>
-		  </div>
+
 		</div>
 
                   <br></br>
@@ -69,13 +66,29 @@
 				<div class="col s12 m2 l3"><p></p></div>
 
 				  <div class="input-field col s6">
-			    <select>
+			    <select name="genre">
 			      <option value="" disabled selected>Choose your option</option>
-			      <option value="1">First Person Shooter</option>
-			      <option value="2">MMORPG</option>
-			      <option value="3">MOBA</option>
+			      <option value="fps">First Person Shooter</option>
+			      <option value="mmo">MMORPG</option>
+				  <option value="moba">MOBA</option>
+				  <option value="action">action</option>
 			    </select>
 			    <label>Select genre</label>
+			  </div>
+			</div>
+			    <br></br>
+    		 <div class="row center"><h3> and sort by date or score</h3></div>
+			<div class="row">
+				<div class="col s12 m2 l3"><p></p></div>
+
+				  <div class="input-field col s6">
+			    <select name="sort">
+			      <option value="" disabled selected>Sorted by</option>
+			      <option value="release_date">date</option>
+			      <option value="score">score</option>
+			      
+			    </select>
+			    <label>Select sorting order</label>
 			  </div>
 			</div>
 	<div class="row">
@@ -85,6 +98,25 @@
 	  </button>
 		  </div>
 		</div>
+		</form>
+		
+		{% for game in gamelist %}
+		  <div class="col s3 m8 offset-m2 l6 offset-l3">
+        <div class="card-panel grey lighten-5 z-depth-1">
+          <div class="row valign-wrapper">
+            <div class="col s2">
+              <img src="/static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+            <p> {{ game.0 }}</p>
+            </div>
+            <div class="col s5">
+              <p> <a href="/game/{{game.0}}">{{ game.1 }}</a> </p>
+            </div>
+            
+
+        </div>
+      </div>
+      </div> 
+	  {% endfor %}
 			  
 
 

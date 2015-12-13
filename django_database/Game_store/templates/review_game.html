@@ -9,8 +9,8 @@
       <!--Import Google Icon Font-->
       <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
-      <link type="text/css" rel="stylesheet" href="../static/css/materialize.css"  media="screen,projection"/>
-      <link href="../static/css/style_register.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+      <link type="text/css" rel="stylesheet" href="/static/css/materialize.css"  media="screen,projection"/>
+      <link href="/static/css/style_register.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 
 
@@ -19,9 +19,9 @@
 
  <nav role="navigation" style="background-color:#eaeaea">
     <div class="nav-wrapper container">
-      <a id="logo-container" class="brand-logo"><img src="../static/LOGO.png" alt="Unsplashed background img 1"></a>
+      <a id="logo-container" class="brand-logo"><img src="/static/LOGO.png" alt="Unsplashed background img 1"></a>
       <ul class="right hide-on-med-and-down">
-        <li><a href="#">Back to Home</a></li>
+        <li><a href="/">Back to Home</a></li>
       </ul>
       <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
     </div>
@@ -32,13 +32,13 @@
         <div class="card-panel grey lighten-5 z-depth-1">
           <div class="row valign-wrapper">
             <div class="col s2">
-              <img src="../static/game_small1.jpg" alt="" class="responsive-img"> <!-- notice the "circle" class -->
+              <img src="/static/game_small1.jpg" alt="" class="responsive-img"> <!-- notice the "circle" class -->
             </div>
             <div class="col s5">
               <span class="black-text">
                   <p>
                   <font size = "33">
-                Name of Game
+                {{ title }}
               </font>
                 </p>
 
@@ -49,7 +49,7 @@
               <span class="black-text">
                   <p>
                   <font size = "33">
-                Game score
+                {{ score }}
               </font>
                 </p>
 
@@ -71,71 +71,51 @@
             <label for="textarea1">Write your review</label>
           </div>
         </div>
-      </form>
+<form action="" method="GET">      
+<div class="row">
+Select n useful comments {{ generate }}
+          <div class="input-field col s12">
+		  <input type="number" name="useful" min="1" max="5">
+            
+            
+          </div>
+        </div>
+		<button class="btn waves-effect waves-light grey darken-4 col s6" type="submit" name="generate">Generate top useful reviews
+       <i class="material-icons right">send</i>
+  </button>
+</form>
 
-
-
+{% for review in reviewlist %}
 
 <div class="col s3 m8 offset-m2 l6 offset-l3">
         <div class="card-panel grey lighten-5 z-depth-1">
           <div class="row valign-wrapper">
             <div class="col s2">
-              <img src="../static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
-            <p> Username</p>
+              <img src="/static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+            <p> {{ review.0 }}</p>
             </div>
             <div class="col s5">
-              <p> Review goes here </p>
+              <p> {{ review.1 }} </p>
             </div>
+			<form action="" method="POST">{% csrf_token %}
             <div class="col s1 offset-s3">
-              <a href="#">900 Upvotes</a>
+              <button class="btn waves-effect waves-light grey darken-4 col s6" type="submit" name="upvote">Upvote
+       <i class="material-icons right">send</i>
+  </button>
             </div>
+			</form> 
+<form action="" method="POST">{% csrf_token %}			
              <div class="col s1">
-              <a href="#">500 Downvotes</a>
+              <button class="btn waves-effect waves-light grey darken-4 col s6" type="submit" name="downvote">Downvote
+       <i class="material-icons right">send</i>
+  </button>
             </div>
-
+</form>
         </div>
       </div>
-      </div>      
-
-<div class="col s3 m8 offset-m2 l6 offset-l3">
-        <div class="card-panel grey lighten-5 z-depth-1">
-          <div class="row valign-wrapper">
-            <div class="col s2">
-              <img src="../static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
-            <p> Username2</p>
-            </div>
-            <div class="col s5">
-              <p> Review goes here </p>
-            </div>
-            <div class="col s1 offset-s3">
-              <a href="#">900 Upvotes</a>
-            </div>
-             <div class="col s1">
-              <a href="#">500 Downvotes</a>
-            </div>
-        </div>
       </div>
-      </div>      
-
-<div class="col s3 m8 offset-m2 l6 offset-l3">
-        <div class="card-panel grey lighten-5 z-depth-1">
-          <div class="row valign-wrapper">
-            <div class="col s2">
-              <img src="../static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
-            <p> Username3</p>
-            </div>
-            <div class="col s5">
-              <p> Review goes here </p>
-            </div>
-            <div class="col s1 offset-s3">
-              <a href="#">900 Upvotes</a>
-            </div>
-             <div class="col s1">
-              <a href="#">500 Downvotes</a>
-            </div>
-        </div>
-      </div>
-      </div>      
+    
+{% endfor %}
 
 
 

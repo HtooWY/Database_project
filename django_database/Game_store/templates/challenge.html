@@ -41,7 +41,8 @@
             </div>
             <div class="parallax"><img src="../static/Wallpaper1.jpg" alt="Unsplashed background img 1"></div>
   </div>
-
+  
+<form action="" method="POST">{% csrf_token %}
 <div id = "unmatched">
 
             <div class="container">
@@ -76,6 +77,7 @@
                 </div>
 
 </div>
+</form>
 
 <div id = "matched">
                     <br> </br>
@@ -85,8 +87,8 @@
 
 <!--Import jQuery before materialize.js-->
       <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-      <script type="text/javascript" src="../static/js/materialize.js"></script>
-      <script type="text/javascript" src="../static/js/init.js"></script>
+      <script type="text/javascript" src="/static/js/materialize.js"></script>
+      <script type="text/javascript" src="/static/js/init.js"></script>
       <script type="text/javascript">
             $( document ).ready(function() {
         // Handler for .ready() called.

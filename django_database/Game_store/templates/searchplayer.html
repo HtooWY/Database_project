@@ -10,8 +10,8 @@
       <!--Import Google Icon Font-->
       <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
-      <link type="text/css" rel="stylesheet" href="../static/css/materialize.css"  media="screen,projection"/>
-      <link href="../static/css/style_register.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+      <link type="text/css" rel="stylesheet" href="/static/css/materialize.css"  media="screen,projection"/>
+      <link href="/static/css/style_register.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 
 
@@ -20,7 +20,7 @@
 
  <nav role="navigation" style="background-color:#eaeaea">
     <div class="nav-wrapper container">
-      <a id="logo-container" class="brand-logo"><img src="../static/LOGO.png" alt="Unsplashed background img 1"></a>
+      <a id="logo-container" class="brand-logo"><img src="/static/LOGO.png" alt="Unsplashed background img 1"></a>
       <ul class="right hide-on-med-and-down">
         <li><a href="#">Back to Home</a></li>
       </ul>
@@ -42,10 +42,10 @@
 
       </div>
     </div>
-    <div class="parallax"><img src="../static/site_banner.png" alt="Unsplashed background img 1"></div>
+    <div class="parallax"><img src="/static/site_banner.png" alt="Unsplashed background img 1"></div>
   </div>
   
-
+<form action="" method="GET">
 	<div class="container">
 	<div class="row center">
 				<div class="col s12 m6 l3"><p></p></div>
@@ -63,13 +63,35 @@
 
 
 		  </div>
+		 </form>
+{% for user in userlist %}
+		  <div class="col s3 m8 offset-m2 l6 offset-l3">
+        <div class="card-panel grey lighten-5 z-depth-1">
+          <div class="row valign-wrapper">
+            <div class="col s2">
+              <img src="/static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+            <p> {{ user.0 }}</p>
+            </div>
+            <div class="col s5">
+              <p> <a href="/player/{{user.0}}">{{ user.1 }}</a> </p>
+            </div>
+            <div class="col s1 offset-s3">
+              <a href="#">900 Upvotes</a>
+            </div>
+             <div class="col s1">
+              <a href="#">500 Downvotes</a>
+            </div>
 
+        </div>
+      </div>
+      </div> 
+	  {% endfor %}
 
 
 <!--Import jQuery before materialize.js-->
       <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-      <script type="text/javascript" src="../static/js/materialize.js"></script>
-      <script type="text/javascript" src="../static/js/init.js"></script>
+      <script type="text/javascript" src="/static/js/materialize.js"></script>
+      <script type="text/javascript" src="/static/js/init.js"></script>
 
 </body>
 

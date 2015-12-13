@@ -64,11 +64,10 @@ if __name__ == '__main__':
                         foreign key (gameid) references game(gameid),\
                         constraint check_id CHECK (challengerid<>accepterid)\
 );")
-        cur.execute("create table comments(commenterid integer AUTO_INCREMENT,\
+        cur.execute("create table comments(commenterid integer,\
                       receiverid integer,\
                       comment_content text,\
                       comment_time datetime,\
-                      primary key (commenterid, receiverid),\
                       foreign key (commenterid) references player(playerid),\
                       foreign key (receiverid) references player(playerid)\
 );")

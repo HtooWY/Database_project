@@ -1,6 +1,6 @@
      
  <!DOCTYPE html>
- <html>
+  <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
@@ -23,42 +23,16 @@
     </div>
   </nav>
 
+  <div class="row center">
+				
+				<div class="col s12 m6 l3"><p></p></div>
+				<div class="input-field col s6">
+					<h4> ONLY ADMIN IS ALLOWED TO ADD NEW GAME <h4>
+			</div>
+			</div>
 
 
-<form action="" method="POST">{% csrf_token %}
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="name" type="text" class="validate" name="title">
-          <label for="genre">Title</label>
-        </div>
-      </div>
-
-
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="genre" type="text" class="validate" name="genre">
-          <label for="genre">Genre</label>
-        </div>
-      </div>
-
-
- 
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="developer" type="text" class="validate" name="developer">
-          <label for="Ddeveloper">Developer</label>
-        </div>
-      </div>
-		
-	  
-	  <div class="row">
-		<div class="col s12 m6 l3"><p></p></div>
-		   <button class="btn waves-effect waves-light grey darken-4 col s6" type="submit" name="action">Add to database
-		   <i class="material-icons right">send</i>
-	  </button>
-		  </div>
-</form>		  
- 
+   
 
       <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
       <script type="text/javascript" src="../static/js/materialize.js"></script>
@@ -68,3 +42,4 @@
 
 
 </html>
+  
