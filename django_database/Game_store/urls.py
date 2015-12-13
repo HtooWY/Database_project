@@ -16,9 +16,9 @@ urlpatterns =[
     url(r'^game/(.{0,9})/reviews/$',views.review,name="review"),
     url(r'^game/(.{0,9})/order/$',views.orderGame,name="ordergame"),
     url(r'^game/(.{0,9})/$',views.gamePage,name="game"),
-    
+    url(r'^player/(.{0,9})/$',views.player,name="player"),
 #     url(r'^game/(.{0,9})/',include([url(r'^$',views.gamePage,name="game"),url(r'^reviews/$',views.review,name="review")])),
-    url(r'^searchplayer/(.{0,9})/$',views.searchPlayer,name="searchplayer"),
+    url(r'^searchplayer/$',views.searchPlayer,name="searchplayer"),
 #     url(r'^order/$',views.orderGame,name="ordergame"),
     url(r'^searchgame/$',views.searchGame,name="searchgame"),
     url(r'^challenge/$',views.challenge,name="challenge"),

@@ -64,7 +64,7 @@ def login(request):
                 c["notfound"]=True
                 return render(request,'login.html',c)
             
-            return redirect("/order")
+            return redirect("/")
         
         return render(request,'login.html',c)
     else:
@@ -81,8 +81,11 @@ def orderGame(request,gid):
         cursor=conn.cursor()
         cursor.execute("select playerid from player where loginname= '%s'"%(request.user.username))
         pid=cursor.fetchone()[0]
-        cursor.execute("insert into ordergame(playerid,gameid,numoforder) values(%s,%s,1)"%(pid,gid))
-        
+        cursor.execute("insert into ordergame(playerid,gameid,numoforder,order_time) values(%s,%s,1,'%s')"%(pid,gid,datetime.datetime.now()))
+        cursor.execute("select orderid from ordergame order by orderid desc limit 1")
+        oid=cursor.fetchone()[0]
+        cursor.execute("select g.* from ordergame o1,ordergame o2, game g where o1.orderid=%s and o2.gameid=g.gameid and o1.gameid<>o2.gameid group by o2.gameid order by SUM(o2.numoforder)"%(oid))
+        recomgames=cursor.fetchall()
 #     if 'gameid' in request.POST:
 #         gameid=request.POST['gameid']
 #         if gameid=="":
@@ -104,8 +107,8 @@ def orderGame(request,gid):
 #     
 #     else:
 #         return render_to_response('ordernewgame.html',c)
-    
-    return render_to_response('buy_confirm.html')
+    c["gamelist"]=recomgames
+    return render_to_response('buy_confirm.html',c)
 
 # Add new game
 @login_required(login_url='/login/')
@@ -150,20 +153,25 @@ def index(request):
     return render_to_response("index.html",c)
 
 # Search player 
-def searchPlayer(request,pid):
+def searchPlayer(request):
+    c={}
     conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
-    with conn:
-        cursor=conn.cursor()
-        cursor.execute("select * from player where playerid = %s"%(pid))
-        if cursor.rowcount==0:
-            raise Http404("Player not found")
-        else:
-            row = cursor.fetchone()
-            context={'pid':row[0]}
-    if "submit" in request.GET:
-        if request.GET["submit"]=="get":
-            return redirect('/player/%s'%(row[0]))      
-    return render(request,'searchplayer.html',context)
+    if "loginname" in request.GET:        
+        with conn:
+            loginname=request.GET["loginname"]
+            cursor=conn.cursor()
+            cursor.execute("select * from player where loginname like '%%%s%%'"%(loginname))
+            userlist=cursor.fetchall()
+            c["userlist"]=userlist
+#         if cursor.rowcount==0:
+#             raise Http404("Player not found")
+#         else:
+#             row = cursor.fetchone()
+#             context={'pid':row[0]}
+#     if "submit" in request.GET:
+#         if request.GET["submit"]=="get":
+#             return redirect('/player/%s'%(row[0]))      
+    return render(request,'searchplayer.html',c)
 
 
 
@@ -181,40 +189,34 @@ def getUserRecord(request, pid):
 
 # Searching game
 def searchGame(request):
+    c={}
     conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
-#     if len(request.GET)==1:
     if 'title' in request.GET:
-        gameid=request.GET['gameid']
         title=request.GET['title']
-        developer=request.GET['developer']
+        genre=request.GET['genre']
         sort=request.GET['sort']
-        order=request.GET['order']
         if title=="":
-            
-            norequest=True
-            return render_to_response('searchgame.html',{"norequest":norequest})
+            c["notitle"]=True
+            return render_to_response('searchgame.html',c)
+        
         else:
             with conn:
                 cursor=conn.cursor()
-                query="select * from game where title = '%s'"%(title)
-                if developer!="":
-                    
-                    query=query+" and developer= %s"%(developer)
+                query="select * from game where title like '%%%s%%'"%(title)
+                if genre!="":
+                    query=query+" and genre= '%s'"%(genre)
                 query=query+" order by %s"%(sort)
-                if order!="asce":
-                    query=query+" %s"%(order)
                 
-                
+                 
+                 
                 cursor.execute(query)
                 if cursor.rowcount==0:
                     raise Http404("Game not found")
                 else:
-                    rows = cursor.fetchall()
-                    result=""
-                    for i in range(len(rows)):
-                        result=result+str(rows[i])+"\n"
-                    return HttpResponse("got it %s"%(result))
-    return render_to_response('searchgame.html')
+                    gamelist = cursor.fetchall()
+                    c["gamelist"]=gamelist
+                    render_to_response('searchgame.html',c)
+    return render_to_response('searchgame.html',c)
 
 # User feedback review the game
 def gamePage(request,gid):  
@@ -293,6 +295,8 @@ def review(request,gid):
     c["title"]=game[1]
     c["score"]=game[5]
     c["reviewlist"]=reviewlist
+    if "generate" in request.GET:
+        c["generate"]= request.GET["generate"]
     return render_to_response("review_game.html",c)
       
 # player page
