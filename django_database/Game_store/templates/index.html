@@ -37,11 +37,21 @@
           <h1 class="header col s12 light"><br><br><br></h1>
         </div>
         <div class="row center">
-          <a href="/login/" id="download-button" class="btn-large waves-effect waves-light grey lighten-1">Login now</a>
+			{% if login %}
+			<a href="/player/{{playerid}}" id="download-button" class="btn-large waves-effect waves-light grey lighten-1">Welcome {{ username }}</a>
           
+          {% else %}
+		  <a href="/login/" id="download-button" class="btn-large waves-effect waves-light grey lighten-1">Login now</a>
+		  {% endif %}
           <a href="/searchplayer/" id="download-button" class="btn-large waves-effect waves-light grey lighten-1">Search player</a>
           <a href="/searchgame/" id="download-button" class="btn-large waves-effect waves-light grey lighten-1">Search games</a>
-          <a href="/register/" id="download-button" class="btn-large waves-effect waves-light grey lighten-1">Register now</a>
+		  {% if login %}
+          <a href="/logout/" id="download-button" class="btn-large waves-effect waves-light grey lighten-1">Logout</a>
+		  {% else %}
+		  
+		  <a href="/register/" id="download-button" class="btn-large waves-effect waves-light grey lighten-1">Register now</a>
+		  {% endif %}
+		  
         </div>
         <br><br>
 
@@ -72,7 +82,7 @@
        
   </div>
              <a href = "/game/{{game.1}}">
-            <img src="../static/game_small1.jpg" alt="" class="responsive-img" width = "650">
+            <img src="../static/Game/{{game.1}}/Icon.png" alt="" class="responsive-img" width = "650">
             <a>
 
             <br> </br>

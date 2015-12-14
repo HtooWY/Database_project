@@ -4,6 +4,7 @@ from django.template.context_processors import csrf
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.template.context import RequestContext
 import MySQLdb as mdb
@@ -64,7 +65,7 @@ def login(request):
                 c["notfound"]=True
                 return render(request,'login.html',c)
             
-            return redirect("/player/")
+            return redirect("/")
         
         return render(request,'login.html',c)
     else:
@@ -141,11 +142,19 @@ def addNewGame(request):
 
 def index(request):
     c={}
+    
     conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
     with conn:
         cursor=conn.cursor()
         cursor.execute("select title,o.gameid,SUM(numoforder) as total from game g, ordergame o where o.gameid=g.gameid group by title order by total desc")
         gamelist=cursor.fetchall()
+        if request.user.username!="":
+            c["login"]=True
+            c["username"]=request.user.username
+            cursor.execute("select * from player where loginname='%s'"%(request.user.username))
+            if cursor.rowcount!=0:
+                
+                c["playerid"]=cursor.fetchone()[0]
 #     if request.user is not None:
 #         c["login"]=True
 #         return render_to_response("index.html",c)
@@ -296,19 +305,39 @@ def gamePage(request,gid):
 # reveiw page
 def review(request,gid):
     c={}
+    c.update(csrf(request))
     c["gid"]=gid
     conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
     with conn:
         cursor=conn.cursor()
         cursor.execute("select * from game where gameid= %s"%(gid))
         game=cursor.fetchone()
-        cursor.execute("select loginname, review from reviews,player where reviews.gameid=%s and reviews.playerid=player.playerid"%(gid))
+        cursor.execute("select * from player where loginname='%s'"%(request.user.username))
+        pid=cursor.fetchone()[0]
+#         cursor.execute("select loginname, review, reviews.playerid, reviewid from reviews,player where reviews.gameid=%s and reviews.playerid=player.playerid"%(gid))
+#         cursor.execute("select loginname, review, r.playerid, r.reviewid, (select sum(rating) from rate_review r1 where r.reviewid=r1.reviewid and r1.rating=1) as upvote, (select sum(rating) from rate_review r2 where r.reviewid=r2.reviewid and r2.rating=-1) as downvote from reviews r,player where r.gameid=%s and r.playerid=player.playerid"%(gid))
+        cursor.execute("select loginname, review, r.playerid, r.reviewid, (select sum(rating) from rate_review r1 where r.reviewid=r1.reviewid and r1.rating=1) as upvote, (select sum(rating) from rate_review r2 where r.reviewid=r2.reviewid and r2.rating=-1) as downvote,(select count(*) from rate_review r3 where playerid=8 and r3.reviewid=r.reviewid) as countj, (select count(*) from reviews r4 where playerid=8 and r4.reviewid=r.reviewid) as countme from reviews r,player where r.gameid=%s and r.playerid=player.playerid"%(gid))
         reviewlist=cursor.fetchall()
     c["title"]=game[1]
     c["score"]=game[5]
     c["reviewlist"]=reviewlist
     if "generate" in request.GET:
-        c["generate"]= request.GET["generate"]
+        n=request.GET["useful"]
+        with conn:
+            cursor=conn.cursor()
+            cursor.execute("select loginname, review, r.playerid, r.reviewid, (select sum(rating) from rate_review r1 where r.reviewid=r1.reviewid and r1.rating=1) as upvote, (select sum(rating) from rate_review r2 where r.reviewid=r2.reviewid and r2.rating=-1) as downvote,(select count(*) from rate_review r3 where playerid=8 and r3.reviewid=r.reviewid) as countj, (select count(*) from reviews r4 where playerid=8 and r4.reviewid=r.reviewid) as countme,(select sum(rating) from rate_review r5 where r.reviewid=r5.reviewid) as ratingj from reviews r,player where r.gameid=%s and r.playerid=player.playerid order by ratingj desc limit %s"%(gid,n))
+            reviewlist=cursor.fetchall()
+            c["reviewlist"]=reviewlist
+    if "upvote" in request.POST:
+        rid=request.POST["upvote"]
+        with conn:
+            cursor=conn.cursor()
+            cursor.execute("insert into rate_review values(%s,%s,1)"%(rid,pid))
+    elif "downvote" in request.POST:
+        rid=request.POST["downvote"]
+        with conn:
+            cursor=conn.cursor()
+            cursor.execute("insert into rate_review values(%s,%s,-1)"%(rid,pid))
     return render_to_response("review_game.html",c)
       
 # player page
@@ -385,3 +414,6 @@ def challenge(request,gid):
     return render(request,"challenge.html",c)
 
 # 
+def logout(request):
+    auth_logout(request)
+    return redirect("/")

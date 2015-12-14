@@ -91,26 +91,33 @@ Select n useful comments {{ generate }}
         <div class="card-panel grey lighten-5 z-depth-1">
           <div class="row valign-wrapper">
             <div class="col s2">
-              <img src="/static/user2.jpg" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
+              <img src="/static/player/{{review.2}}/user.png" alt="" class="circle responsive-img"> <!-- notice the "circle" class -->
             <p> {{ review.0 }}</p>
             </div>
             <div class="col s5">
               <p> {{ review.1 }} </p>
             </div>
+			{% if review.6 == 0 and review.7 == 0 %}
 			<form action="" method="POST">{% csrf_token %}
-            <div class="col s1 offset-s3">
-              <button class="btn waves-effect waves-light grey darken-4 col s6" type="submit" name="upvote">Upvote
+            <div>
+              <button class="btn waves-effect waves-light" type="submit" name="upvote" value="{{review.3}}">Upvote : {{review.4}}
        <i class="material-icons right">send</i>
   </button>
             </div>
-			</form> 
-<form action="" method="POST">{% csrf_token %}			
-             <div class="col s1">
-              <button class="btn waves-effect waves-light grey darken-4 col s6" type="submit" name="downvote">Downvote
+			
+             <div>
+              <button class="btn waves-effect waves-light" type="submit" name="downvote" value="{{review.3}}">Downvote : {{review.5}}
        <i class="material-icons right">send</i>
   </button>
             </div>
 </form>
+{% else %}
+<div>
+              <button class="btn waves-effect waves-light">U have voted Upvote : {{review.4}}|Downvote : {{review.5}}
+       <i class="material-icons right">send</i>
+  </button>
+            </div>
+{% endif %}
         </div>
       </div>
       </div>

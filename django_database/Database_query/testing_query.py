@@ -61,5 +61,7 @@ if __name__ == '__main__':
 #         print cur.fetchall()
 #         cur.execute("insert into ordergame(playerid,gameid,numoforder) values (2,4,1)")
 #         cur.execute("select title,SUM(numoforder) as total from game g, ordergame o where o.gameid=g.gameid group by title order by total desc")
-        cur.execute("insert into challenges(accepterid,gameid,challengerid,cha_time,outcome) values(%s,%s,%s,'%s','pending')"%(8,1,1,datetime.datetime.now()))
+#         cur.execute("insert into challenges(accepterid,gameid,challengerid,cha_time,outcome) values(%s,%s,%s,'%s','pending')"%(8,1,1,datetime.datetime.now()))
+        cur.execute("select loginname, review, reviews.playerid, reviews.reviewid, sum(r1.rating), sum(r2.rating) from reviews,player,rate_review r1,rate_review r2 where reviews.gameid=1 and reviews.playerid=player.playerid and r1.reviewid=reviews.reviewid and r2.reviewid=reviews.reviewid and r1.rating=1 and r2.rating=-1 group by reviews.reviewid;")
+        cur.execute("select loginname, review, r.playerid, r.reviewid, (select sum(rating) from rate_review r2 where r.reviewid=r2.reviewid) as ratingj, (select count(*) from rate_review r3 where playerid=8 and r3.reviewid=r.reviewid) as countj, (select count(*) from reviews r4 where playerid=8 and r4.reviewid=r.reviewid) as countme from reviews r,player where r.gameid=1 and r.playerid=player.playerid order by ratingj desc limit 5")
         print "finish"
