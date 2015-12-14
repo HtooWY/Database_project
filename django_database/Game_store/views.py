@@ -296,6 +296,7 @@ def gamePage(request,gid):
 # reveiw page
 def review(request,gid):
     c={}
+    c["gid"]=gid
     conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
     with conn:
         cursor=conn.cursor()
@@ -314,6 +315,7 @@ def review(request,gid):
 def player(request,pid):
     c={}
     c.update(csrf(request))
+    c["pid"]=pid
     conn=mdb.connect(host='localhost',user='htoowaiyan', passwd='Admin@12345',db='game_community')
     if "comment" in request.POST:
         with conn:
@@ -329,7 +331,7 @@ def player(request,pid):
         player=cursor.fetchone()
         cursor.execute("select * from game")
         games=cursor.fetchall()
-        cursor.execute("select loginname, receiverid, comment_content from comments, player where player.playerid=comments.commenterid and receiverid=%s"%(pid))
+        cursor.execute("select loginname, receiverid, comment_content,commenterid from comments, player where player.playerid=comments.commenterid and receiverid=%s"%(pid))
         comments=cursor.fetchall()
         
     c["name"]=player[1]
